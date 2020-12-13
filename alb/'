@@ -1,0 +1,33 @@
+#Application Loadbalancer
+resource "aws_lb" "test-application-loadbalancer" {
+  name               = var.application_loadbalancer_name
+  internal           = var.internal
+  load_balancer_type = var.load_balancer_type
+  security_groups    = ["${var.security_groups[0]}", "${var.security_groups[1]}", "${var.security_groups[2]}"]
+  subnets            = ["${var.subnets[0]}", "${var.subnets[1]}", "${var.subnets[2]}"]
+
+  enable_deletion_protection = var.enable_deletion_protection
+  idle_timeout = var.idle_timeout
+  access_logs {
+    bucket  = var.access_log_bucket
+    prefix  = var.prefix
+    enabled = var.enabled
+  }
+
+  tags = {
+    Environment = "Dev"
+  }
+}
+
+#Target Group of Application Loadbalancer
+resource "aws_lb_target_group" "target_group" {
+  name     = var.target_group_name
+  port     = var.instance_port      ##### Don't use protocol when target type is lambda
+  protocol = var.instance_protocol  ##### Don't use protocol when target type is lambda
+  vpc_id   = var.vpc_id
+  target_type = var.target_type_alb[0]
+  load_balancing_algorithm_type = var.load_balancing_algorithm_type[0]
+  stickiness {
+  type = var.stickiness_type[0] ## The type of sticky sessions. The only current possible values are lb_cookie for ALBs and source_ip for NLBs.
+  }
+}
