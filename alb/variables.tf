@@ -22,7 +22,7 @@ description = "List of subnets for Loadbalancer"
 type = list
 default = ["subnet-5d85d427", "subnet-e116afad", "subnet-ea2f3482"]
 }
-variable "security_groups" {
+variable "security_groups" {     ## Security groups are not supported for network load balancers
 description = "List of security Groups for Loadbalancer"
 type = list
 default = ["sg-04be052143c79bd66", "sg-06601d6818362f774", "sg-0fa141a9899965afb"]
