@@ -17,7 +17,7 @@ resource "aws_launch_configuration" "demo_launch_configuration" {
                 echo "<h1>Deployed via Terraform</h1>" | sudo tee /var/www/html/index.html
                 EOF
   placement_tenancy = var.placement_tenancy[0]
-  root_block_device {
+  root_block_device {         ## If we mention root volume size then it should be greater than or equal to the original size or don't mention it, it will take the original root volume size.
     volume_type = var.volume_type[1]
     volume_size = var.volume_size
     iops = var.iops
