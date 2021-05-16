@@ -12,6 +12,11 @@ description = "Availability Zone for Classic LoadBalancer"
 type = list
 default = ["us-east-2a", "us-east-2b", "us-east-2c"]
 }
+variable "security_groups" {
+description = "Provide the security group ID of the security group for classic load balancer"
+type = list
+default = ["sg-04be052143c79bd66"]
+}
 variable "instances" {
 description = "Attach instances to the Classic LoadBalancer"
 type = list
