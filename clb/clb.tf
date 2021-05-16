@@ -2,6 +2,7 @@ resource "aws_elb" "classic_loadbalancer" {
   name               = var.classic_loadbalancer_name
   availability_zones = ["${var.Availabilty_Zone[0]}", "${var.Availabilty_Zone[1]}", "${var.Availabilty_Zone[2]}"]
 #  subnets = ["subnet-5d85d427", "subnet-e116afad", "subnet-ea2f3482"]
+  security_groups = [ "${var.security_groups[0]}" ]
 
   access_logs {
     bucket        = var.bucket
