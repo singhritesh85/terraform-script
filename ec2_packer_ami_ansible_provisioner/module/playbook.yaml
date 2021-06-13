@@ -1,0 +1,30 @@
+---
+# This is a test playbook.
+- name: This is a playbook
+  hosts: 127.0.0.1
+  become: yes
+  tasks:
+  - name: download the java 1.8
+    yum: 
+      name: java-1.8*
+      state: present
+  - name: create directory for tomcat
+    file:
+      path: /opt/apache-tomcat
+      state: directory
+  - name: download the tomcat package from the given link
+    get_url: 
+      url: https://apachemirror.wuchna.com/tomcat/tomcat-8/v8.5.66/bin/apache-tomcat-8.5.66.tar.gz
+      dest: /opt/apache-tomcat
+  - name: untar the tomcat file
+    unarchive:
+      src: /opt/apache-tomcat/apache-tomcat-8.5.66.tar.gz
+      dest: /opt/apache-tomcat/
+  - name: give execute permission to shutdown.sh
+    file: 
+      path: /opt/apache-tomcat/apache-tomcat-8.5.66/bin/shutdown.sh
+      mode: 755
+  - name:  give execute permission to startup.sh
+    file: 
+      path: /opt/apache-tomcat/apache-tomcat-8.5.66/bin/startup.sh
+      mode: 755
