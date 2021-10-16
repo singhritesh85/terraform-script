@@ -1,0 +1,59 @@
+---
+- name: create Loadbalancer
+  hosts: loadbalancer
+  become: true
+  tasks:
+  - name: Install haproxy and keepalived and awscli
+    yum:
+      name:
+      - haproxy
+      - keepalived
+      - awscli
+      state: present 
+  - name: copy haproxy content to loadbalancer 1
+    copy: 
+      src: haproxy-loadbalancer-master.conf
+      dest: /etc/haproxy/haproxy.cfg
+    delegate_to: "{{ groups['loadbalancer'][0] }}"
+  - name: copy haproxy content to loadbalancer 2
+    copy: 
+      src: haproxy-loadbalancer-backup.conf
+      dest: /etc/haproxy/haproxy.cfg
+    delegate_to: "{{ groups['loadbalancer'][1] }}"
+  - name: create keepalived for loadbalancer 1
+    copy:
+      src: keepalived-1.conf
+      dest: /etc/keepalived/keepalived.conf
+    delegate_to: "{{ groups['loadbalancer'][0] }}"
+  - name: create keepalived for loadbalancer 2
+    copy:
+      src: keepalived-2.conf
+      dest: /etc/keepalived/keepalived.conf
+    delegate_to: "{{ groups['loadbalancer'][1] }}" 
+  - name: Start haproxy service
+    service:
+      name: haproxy
+      state: started
+      enabled: true
+  - name: copy failover.sh on first loadbalancer
+    copy: 
+      src: failover-1.sh
+      dest: /etc/keepalived/failover.sh
+      mode: a+x
+    delegate_to: "{{ groups['loadbalancer'][0] }}"
+  - name: copy failover.sh 0n second loadbalancer
+    copy: 
+      src: failover-2.sh
+      dest: /etc/keepalived/failover.sh
+      mode: a+x
+    delegate_to: "{{ groups['loadbalancer'][1] }}"
+  - name: Start keepalived service
+    service: 
+      name: keepalived
+      state: started
+      enabled: true
+  - name: Set SELinux in permissive mode
+    shell: |
+             setenforce 0
+             sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+             

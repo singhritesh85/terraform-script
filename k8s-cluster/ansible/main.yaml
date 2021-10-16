@@ -1,0 +1,15 @@
+---
+- name: Run playbook to create Loadbalancer 
+  import_playbook: create-loadbalancer.yaml
+
+- name: Run playbook to create kubernetes cluster
+  import_playbook: create-kubernetes-cluster.yaml
+
+- name: Run playbook to join first master node to kubernetes cluster
+  import_playbook: masternode.yaml
+
+- name: Run playbook to join other master nodes to kubernetes cluster
+  import_playbook: clusterjoin.yaml
+
+- name: Run playbook to join other master nodes to kubernetes cluster
+  import_playbook: workernode.yaml

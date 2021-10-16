@@ -1,0 +1,124 @@
+---
+- name: create kubernetes cluster
+  hosts: master-1,master-23,worker
+  gather_facts: false
+  become: yes
+  tasks:
+  - name: Install docker package
+    yum:
+      name: docker
+      state: present
+    
+  - name: Start the docker service
+    service:
+      name: docker
+      state: started
+      enabled: true
+
+#  - name: Add systemd driver in docker cgroup driver
+#    copy:
+#      content: |
+#                 {"exec-opts": ["native.cgroupdriver=systemd"]}
+#      dest: /etc/docker/daemon.json
+
+#  - name: Restart the docker service
+#    service:
+#      name: docker
+#      state: restarted
+   
+  - name: Disable swap memory
+    shell: |
+             sudo swapoff -a 
+ 
+  - name: update fstab so that swap remains disabled after a reboot
+    shell: sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+
+  - name: Set SELinux in permissive mode
+    shell: |
+             sudo setenforce 0
+             sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+
+  - name: Enable bridging networking
+    copy:
+      content: |
+                 net.bridge.bridge-nf-call-ip6tables = 1
+                 net.bridge.bridge-nf-call-iptables = 1
+      dest: /etc/sysctl.d/kubernetes.conf
+
+  - name: Enable bridging on all the nodes
+    shell: |
+             sysctl --system
+
+  - name: Create Repository to install kubeadmn, kubectl, kubectl on all kubernetes cluster nodes
+    copy:
+      content: |
+                  [kubernetes]
+                  name=Kubernetes
+                  baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+                  enabled=1
+                  gpgcheck=1
+                  repo_gpgcheck=1
+                  gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+                  exclude=kubelet kubeadm kubectl
+      dest: /etc/yum.repos.d/kubernetes.repo
+
+  - name: Install kubeadm, kubectl and kubelet
+    yum: 
+      name: 
+      - kubeadm-1.19.2
+      - kubectl-1.19.2
+      - kubelet-1.19.2
+      state: present
+      disable_excludes: kubernetes
+
+  - name: Enable kubelet service
+    service: 
+      name: kubelet
+      enabled: true
+ 
+#  - name: Initialize kubernets cluster on Master node
+#    shell: |
+#             kubeadm init --control-plane-endpoint "18.220.46.18:8443" --upload-certs --pod-network-cidr=192.168.0.0/16 --v=5 #> create-cluster
+#             cat cluster-script|tail -4 > k8s-worker.sh
+#    register: output
+#    delegate_to: "{{ item }}"       # "{{ groups['master'][0] }}"
+#    with_items: "{{ groups['master'][0] }}"    
+
+#  - name: Copying required files
+#    shell: |
+#               sudo mkdir -p $HOME/.kube
+#               sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+#               sudo chown $(id -u):$(id -g) $HOME/.kube/config
+#    delegate_to: "{{ item }}"          #"{{ groups['master'][0] }}"
+#    with_items: "{{ groups['master'][0] }}"  
+
+#  - name: Add pod network add-ons
+#    shell: |
+#             kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+#    delegate_to: "{{ item }}"                #"{{ groups['master'][0] }}"
+#    with_items: "{{ groups['master'][0] }}"  
+
+#  - name: capture output on master and worker nodes
+#    local_action:  copy content={{ output.stdout }} dest=join_token
+#    become: false
+  
+#  - name: copy token to master and worker nodes
+#    copy:
+#      src: join_token
+#      dest: join_token
+
+#  - name: Attach master to the kubernetes cluster
+#    shell: |
+#             kubeadm reset -f
+#             tail -12 join_token > cluster-script
+#             cat cluster-script | head -3 > k8s-master.sh
+#             /usr/bin/sh k8s-master.sh
+#    delegate_to: "{{ groups['master'][1],[2] }}"  
+  
+#  - name: Attach worker to the kubernetes cluster
+#    shell: |
+#             kubeadm reset -f
+#             tail -12 join_token > cluster-script
+#             cat cluster-script | tail -2 > k8s-worker.sh
+#             /usr/bin/sh k8s-worker.sh
+#    delegate_to: "{{ groups['worker'] }}"
