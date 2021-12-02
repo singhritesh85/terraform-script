@@ -9,3 +9,13 @@ Steps to create kubernetes Cluster using the Script
 6. In file failover-1.sh and failover-2.sh update the Elastic IP and loadbalancer instance id
 7. In file masternode.yaml update the Elastic IP (which is now assigned to one of the loadbalancer) in the command kubeadm init --control-plane-endpoint "18.220.46.18:8443" --upload-certs --pod-network-cidr=192.168.0.0/16 --v=5
 8. Finally run the command ansible-playbook -i inventory/hosts main.yaml. It will create the complete kubernetes cluster.
+
+
+Steps to Add More Master and Worker Nodes to the Kubernetes Cluster
+====================================================================
+
+Update the terraform.tfvars file as required.
+To Add more master and worker nodes to the kubernetes cluster go to the directory worker-master-extra and then terraform; run the command terraform apply -auto-approve.
+Then go to one directory back into ansible directory, update the file haproxy-loadbalancer-master.conf and haproxy-loadbalancer-backup.conf. Update all the nodes IP as required in the two files haproxy-loadbalancer-master.conf and haproxy-loadbalancer-backup.conf.
+First of all run the command "ansible-playbook -i ../../../k8s-cluster/ansible/inventory/hosts create-loadbalancer.yaml" to update the kubernetes master nodes for all the kubernetes masters into the haproxy loadbalancer.
+Finally run the command ansible-playbook -i inventory/hosts main.yaml.
