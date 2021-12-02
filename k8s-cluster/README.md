@@ -14,8 +14,8 @@ Steps to create kubernetes Cluster using the Script
 Steps to Add More Master and Worker Nodes to the Kubernetes Cluster
 ====================================================================
 
-Update the terraform.tfvars file as required.
-To Add more master and worker nodes to the kubernetes cluster go to the directory worker-master-extra and then terraform; run the command terraform apply -auto-approve.
-Then go to one directory back into ansible directory, update the file haproxy-loadbalancer-master.conf and haproxy-loadbalancer-backup.conf. Update all the nodes IP as required in the two files haproxy-loadbalancer-master.conf and haproxy-loadbalancer-backup.conf.
-First of all run the command "ansible-playbook -i ../../../k8s-cluster/ansible/inventory/hosts create-loadbalancer.yaml" to update the kubernetes master nodes for all the kubernetes masters into the haproxy loadbalancer.
-Finally run the command ansible-playbook -i inventory/hosts main.yaml.
+1. Update the terraform.tfvars file as required.
+2. To Add more master and worker nodes to the kubernetes cluster go to the directory worker-master-extra and then terraform; run the command terraform apply -auto-approve.
+3. Then go to one directory back into ansible directory, update the file haproxy-loadbalancer-master.conf and haproxy-loadbalancer-backup.conf. Update all the nodes IP as required in the two files haproxy-loadbalancer-master.conf and haproxy-loadbalancer-backup.conf.
+4. First of all run the command "ansible-playbook -i ../../../k8s-cluster/ansible/inventory/hosts create-loadbalancer.yaml" to update the kubernetes master nodes for all the kubernetes masters into the haproxy loadbalancer.
+5. Finally run the command ansible-playbook -i inventory/hosts main.yaml.
