@@ -13,8 +13,8 @@
       src: haproxy-loadbalancer-backup.conf
       dest: /etc/haproxy/haproxy.cfg
     delegate_to: "{{ groups['loadbalancer'][1] }}"
-  - name: Start haproxy service
+  - name: Restart haproxy service
     service:
       name: haproxy
-      state: started
+      state: restarted
       enabled: true
