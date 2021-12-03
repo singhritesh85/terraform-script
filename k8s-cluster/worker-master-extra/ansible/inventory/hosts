@@ -1,0 +1,13 @@
+[worker]
+172.31.41.160
+172.31.38.202
+172.31.40.230
+[master]
+172.31.44.76
+172.31.44.220
+172.31.38.24
+[all:vars]
+ansible_connection=ssh
+ansible_user=root
+ansible_ssh_pass=unix
+

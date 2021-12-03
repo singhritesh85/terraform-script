@@ -1,0 +1,17 @@
+---
+- name: Attach worker to kubernetes cluster
+  hosts: worker
+  become: true
+  gather_facts: false
+  tasks:
+  - name: copy token to master and worker nodes
+    copy:
+      src: join_token
+      dest: join_token
+    
+  - name: Attach worker to the kubernetes cluster
+    shell: |
+             kubeadm reset -f
+             tail -12 join_token > cluster-script
+             cat cluster-script | tail -2 > k8s-worker.sh
+             /usr/bin/sh k8s-worker.sh
