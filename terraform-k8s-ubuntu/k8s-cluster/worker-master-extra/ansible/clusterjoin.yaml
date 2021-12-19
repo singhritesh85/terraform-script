@@ -1,0 +1,18 @@
+---
+- name: Join remaining master nodes to the cluster
+  hosts: master
+  tasks:
+  - name: copy join_token file to the current directory
+    local_action: copy src="../../../k8s-cluster/ansible/join_token" dest="join_token"
+
+  - name: copy token to master and worker nodes
+    copy:
+      src: join_token
+      dest: join_token
+  
+  - name: Attach master to the kubernetes cluster
+    shell: |
+             kubeadm reset -f
+             tail -12 join_token > cluster-script
+             cat cluster-script | head -3 > k8s-master.sh
+             /bin/sh k8s-master.sh

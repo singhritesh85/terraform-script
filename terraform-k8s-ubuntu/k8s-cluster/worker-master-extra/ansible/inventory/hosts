@@ -1,0 +1,13 @@
+[worker]
+172.31.32.73
+172.31.41.16
+172.31.41.121
+[master]
+172.31.39.144
+172.31.43.244
+172.31.32.233
+[all:vars]
+ansible_connection=ssh
+ansible_user=ritesh
+ansible_ssh_pass=unix
+

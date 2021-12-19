@@ -1,0 +1,17 @@
+[loadbalancer]
+172.31.34.53
+172.31.33.184
+[worker]
+172.31.41.142
+172.31.42.243
+172.31.41.30
+[master-1]
+172.31.44.239
+[master-23]
+172.31.44.147
+172.31.32.57
+[all:vars]
+ansible_connection=ssh
+ansible_user=ritesh
+ansible_ssh_pass=unix
+
