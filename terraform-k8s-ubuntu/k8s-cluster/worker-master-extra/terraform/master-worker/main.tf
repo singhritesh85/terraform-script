@@ -35,7 +35,9 @@ resource "aws_instance" "ec2_instance_master" {
   }
   user_data =     <<-EOT
                   #!/bin/bash
-                  yum install -y awscli nfs-common cifs-utils
+                  apt-get install -y awscli 
+                  apt-get install -y nfs-common 
+                  apt-get install -y cifs-utils
                   sed -i '0,/PasswordAuthentication no/s//PasswordAuthentication yes/' /etc/ssh/sshd_config
                   service sshd reload
                   /usr/sbin/useradd -s /bin/bash -m ritesh;
@@ -87,7 +89,9 @@ resource "aws_instance" "ec2_instance_worker" {
   }
   user_data =      <<-EOT
                    #!/bin/bash
-                   yum install -y awscli nfs-common cifs-utils
+                   apt-get install -y awscli 
+                   apt-get install -y nfs-common 
+                   apt-get install -y cifs-utils
                    sed -i '0,/PasswordAuthentication no/s//PasswordAuthentication yes/' /etc/ssh/sshd_config
                    service sshd reload
                    /usr/sbin/useradd -s /bin/bash -m ritesh;
