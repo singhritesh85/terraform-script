@@ -1,0 +1,19 @@
+module "s3_lambda" {
+source = "../module-lambda"
+bucket = var.bucket
+acl = var.acl[0]
+sse_algorithm = var.sse_algorithm[0]
+sns_topic_name = var.sns_topic_name
+display_name = var.display_name
+email_endpoint = var.email_endpoint
+env = var.env
+iam_policy_name = var.iam_policy_name
+iam_role_name = var.iam_role_name
+policy = var.policy
+trust_relationship = var.trust_relationship
+lambda_function_name = var.lambda_function_name
+filename = var.filename
+handler = var.handler
+runtime = var.runtime[5]
+retention_in_days = var.retention_in_days
+}
