@@ -1,0 +1,1 @@
+Create S3 Bucket, Lambda function and SNS Topic with Subscription. You need to provide ARN of the SNS Topic in Lambda function code section and Go to your Group E-mail ID and confirm the subscription.
