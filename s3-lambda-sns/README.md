@@ -1,1 +1,2 @@
 Create S3 Bucket, Lambda function and SNS Topic with Subscription. You need to provide ARN of the SNS Topic in Lambda function code section after creating the lambda function and Go to your Group E-mail ID and confirm the subscription.
+Whenever you will upload a file to created s3 bucket then it will trigger the Lambda function and lambda will trigger the SNS and an Email will be sent to your email id. 
