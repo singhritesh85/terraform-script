@@ -2,7 +2,7 @@ resource "aws_instance" "foo" {
   ami           = var.provide_ami
   instance_type = var.instance_type
   monitoring = true
-  security_groups = var.security_groups
+  security_groups = var.security_groups      #vpc_security_group_ids = [aws_security_group.demo-sg.id]  If you are creating Instances in a VPC, use vpc_security_group_ids instead. (security_groups = Optional, EC2-Classic and default VPC only) 
   subnet_id = var.subnet_id
   root_block_device{
     volume_type="gp2"
