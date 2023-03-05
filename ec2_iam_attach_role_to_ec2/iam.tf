@@ -1,4 +1,4 @@
-resource "aws_iam_role_policy" "iam_policy" {
+resource "aws_iam_role_policy" "iam_policy" {          #### It is inline policy 
   name = var.iam_policy_name
   role = aws_iam_role.iam_role.id
 
