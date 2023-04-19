@@ -1,0 +1,61 @@
+---
+# This is a test playbook.
+- name: This is a playbook
+  hosts: 127.0.0.1
+  become: yes
+  tasks:
+  - name: download the java 11
+    yum: 
+      name: java-11*
+      state: present
+  - name: create directory for tomcat
+    file:
+      path: /opt/apache-tomcat
+      state: directory
+  - name: download the tomcat package from the given link
+    get_url: 
+      url: https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.87/bin/apache-tomcat-8.5.87.tar.gz
+      dest: /opt/apache-tomcat
+  - name: unarchive the tomcat file
+    unarchive:
+      src: /opt/apache-tomcat/apache-tomcat-8.5.87.tar.gz
+      dest: /opt/apache-tomcat/
+  - name: start tomcat on port 80
+    replace:
+      path: /opt/apache-tomcat/apache-tomcat-8.5.87/conf/server.xml
+      regexp: 'port="8080"'
+      replace: 'port="80"'
+  - name: create tomcat as a service
+    copy:
+      content: |
+        [Unit]
+        Description=Tomcat Service
+        Requires=network.target
+        After=network.target
+        [Service]
+        Type=forking
+        User=root
+        Environment="CATALINA_PID=/opt/apache-tomcat/apache-tomcat-8.5.87/logs/tomcat.pid"
+        Environment="CATALINA_BASE=/opt/apache-tomcat/apache-tomcat-8.5.87"
+        Environment="CATALINA_HOME=/opt/apache-tomcat/apache-tomcat-8.5.87"
+        Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
+        ExecStart=/opt/apache-tomcat/apache-tomcat-8.5.87/bin/startup.sh
+        ExecStop=/opt/apache-tomcat/apache-tomcat-8.5.87/bin/shutdown.sh
+        Restart=on-abnormal
+        [Install]
+        WantedBy=multi-user.target 
+      dest: /etc/systemd/system/tomcat.service
+  - name: reload the SystemD for configurations to be read again
+    systemd:
+      daemon-reload: yes
+  - name: start tomcat and enable
+    systemd:
+      name: tomcat
+      state: started
+      enabled: true
+  - name: copy a sample war file
+    copy:
+      src: /home/project-path/hello-world-1/webapp/target/webapp.war
+      dest: /opt/apache-tomcat/apache-tomcat-8.5.87/webapps
+  - name: To check the status of tomcat service      ### Answer for Question 3 
+    shell: systemctl status tomcat
