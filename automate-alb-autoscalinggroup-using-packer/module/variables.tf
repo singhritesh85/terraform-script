@@ -31,7 +31,7 @@ default = "vpc-307cb55b"
 variable "cidr_blocks" {
 description = "Provide CIDR Block for Security Group"
 type = list
-default = ["122.161.65.227/32"]
+default = ["122.161.XX.XXX/32"]
 }
 variable "alb_name" {
 description = "Provide the ALB Name"
