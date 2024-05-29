@@ -49,7 +49,7 @@ resource "aws_instance" "demo_instance" {           ###  Answer for Question 1
                 "sudo yum install git -y",
                 "sudo mkdir /home/project-path",
                 "cd /home/project-path",
-                "sudo git clone https://github.com/kamalmohan217/hello-world-1.git",
+                "sudo git clone https://github.com/singhritesh85/hello-world-1.git",
                 "sudo cp /tmp/playbook.yaml /home/project-path/hello-world-1"
     ]
   }
